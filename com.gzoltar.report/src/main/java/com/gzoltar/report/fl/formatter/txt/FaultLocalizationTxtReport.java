@@ -16,7 +16,9 @@
  */
 package com.gzoltar.report.fl.formatter.txt;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -56,6 +58,28 @@ public class FaultLocalizationTxtReport implements IFaultLocalizationReportForma
 
     List<Transaction> transactions = spectrum.getTransactions();
 
+    /**
+     * Save row information of coverage matrix (aka. test case)
+     */
+    BufferedWriter rowWriter = null;
+    rowWriter = new BufferedWriter(new FileWriter("matrix-row-information.txt"));
+    for (Transaction transaction : transactions) {
+    	rowWriter.write(transaction.toString()+"\n");
+    }
+    rowWriter.close();
+    
+    /**
+     * Save column information of coverage matrix (aka. covered method/class/line)
+     */
+    BufferedWriter columnWriter = null;
+    columnWriter = new BufferedWriter(new FileWriter("matrix-column-information.txt"));
+    for (ProbeGroup probeGroup : probeGroups) {
+        for (Probe probe : probeGroup.getProbes()) {
+        	columnWriter.write(probe.toString()+"\n");
+        }
+    }
+    columnWriter.close();
+    
     /**
      * Print 'matrix'
      */
